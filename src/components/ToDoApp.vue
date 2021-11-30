@@ -3,8 +3,8 @@
     <h1 class="text-center mt-5">My Vue To do App.</h1>
 
     <div class="d-flex mt-5">
-      <input type="text" placeholder="Enter task" class="form-control" >
-      <button type="button" class="btn btn-success">Success</button>
+      <input v-model="task" type="text" placeholder="Enter task" class="form-control" >
+      <button @click="submitTask()" type="button" class="btn btn-success">Success</button>
     </div>
 
     <table class="table mt-5">
@@ -17,16 +17,29 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="(task, index) in task" :key="index">
-          <td >{{task.name}}</td>
-          <td>{{task.status}}</td>
+        <tr v-for="(task, index) in tasks" :key="index">
+          <td :class="{'finished': task.status === 'Finished',
+          'in-progress': task.status === 'In-progress'}">
+            <span>
+              {{task.name}}
+            </span>
+          </td>
           <td>
-            <div class="text-center">
+            <span @click="changeStatus(index)" class="pointer"
+            :class="{'text-danger': task.status === 'To-do',
+            'text-warning': task.status === 'In-progress',
+            'text-success': task.status === 'Finished'}">
+              
+              {{task.status}}
+            </span>
+          </td>
+          <td>
+            <div @click="editTask(index)" class="text-center">
               <span class="fa fa-pen"></span>
             </div>
           </td>
           <td>
-            <div class="text-center">
+            <div @click="deleteTask(index)" class="text-center">
               <span class="fa fa-trash"></span>
             </div>
           </td>
@@ -45,25 +58,73 @@ export default {
 
   data(){
     return{
-      task: [
+      task: '',
+      editedTask: null,
+      availableStatus: ['To-do', 'In-progress', 'Finished'],
+
+      tasks: [
               {
                 name: 'Learn JavaScript',
-                status: 'To do'
+                status: 'To-do'
               },
               {
                 name: 'Learn VueJs',
-                status: 'To do'
+                status: 'To-do'
               },
               {
                 name: 'Learn Development',
-                status: 'To do'
+                status: 'To-do'
               }
             ]
           }
-  }    
+  },
+  
+  methods: {
+    submitTask(){
+      if(this.task.length === 0)return;
+
+      if(this.editedTask === null){
+          this.tasks.push({
+            name: this.task,
+            status: 'to-do'
+          })}
+          else{
+            this.tasks[this.editedTask].name = this.task
+            this.editedTask = null
+          }
+          this.task = ''   
+        
+    },
+
+    deleteTask(index){
+      this.tasks.splice(index, 1)
+    },
+
+    editTask(index){
+      this.task = this.tasks[index].name
+      this.editedTask = index
+    },
+
+    changeStatus(index){
+      let newIndex = this.availableStatus.indexOf(this.tasks[index].status)
+      if(++newIndex > 2) newIndex = 0  
+      this.tasks[index].status = this.availableStatus[newIndex] 
+    }
+  }
 }
+
 
 </script>
 <style scoped>
-
+.pointer{
+  cursor: pointer;
+}
+.finished{
+  text-decoration: line-through;
+  background-color: #bdecb6;
+}
+.in-progress{
+  text-decoration: line-through;
+  background-color: #FDFD96;
+}
 </style>
