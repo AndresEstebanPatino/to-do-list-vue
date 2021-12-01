@@ -18,13 +18,13 @@
       </thead>
       <tbody>
         <tr v-for="(task, index) in tasks" :key="index">
-          <td :class="{'finished': task.status === 'Finished',
+          <td style="width= 50% " :class="{'finished': task.status === 'Finished',
           'in-progress': task.status === 'In-progress'}">
             <span>
               {{task.name}}
             </span>
           </td>
-          <td>
+          <td style="width= 30% ">
             <span @click="changeStatus(index)" class="pointer"
             :class="{'text-danger': task.status === 'To-do',
             'text-warning': task.status === 'In-progress',
@@ -33,12 +33,12 @@
               {{task.status}}
             </span>
           </td>
-          <td>
+          <td style="width= 10% ">
             <div @click="editTask(index)" class="text-center">
               <span class="fa fa-pen"></span>
             </div>
           </td>
-          <td>
+          <td style="width= 10% "> 
             <div @click="deleteTask(index)" class="text-center">
               <span class="fa fa-trash"></span>
             </div>
@@ -124,7 +124,7 @@ export default {
   background-color: #bdecb6;
 }
 .in-progress{
-  text-decoration: line-through;
+  
   background-color: #FDFD96;
 }
 </style>
